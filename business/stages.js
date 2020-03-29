@@ -1494,4 +1494,4 @@ const stages = [
   { name: "33-1" }
 ];
 
-export default { stages };
+export default stages;
