@@ -1,4 +1,4 @@
-const contents = [
+const chestContents = [
   "Dust x1",
   "Mythic+ Stone",
   "Mythic Gear",
@@ -17,4 +17,4 @@ const contents = [
   "Faction Emblems"
 ];
 
-export default contents;
+export default chestContents;

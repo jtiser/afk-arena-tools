@@ -3,7 +3,7 @@
     <v-card-title class="headline">Stage Idle Rewards</v-card-title>
     <v-card-text>
       <v-autocomplete
-        :items="stages"
+        :items="stageNames"
         v-model="currentStage"
         item-text="name"
         label="What stage are you on?"
@@ -31,7 +31,7 @@ import DatetimePicker from "vuetify-datetime-picker";
 Vue.use(DatetimePicker);
 import moment from "moment";
 
-import business from "@/business";
+import jsonStages from "~/static/stages.json";
 export default {
   name: "stage-idle-rewards",
   data() {
@@ -61,11 +61,11 @@ export default {
     areValuesOk() {
       return !!this.currentStage && !!this.datetime;
     },
-    rewards() {
-      return business.rewards;
-    },
     stages() {
-      return this.rewards.map(x => {
+      return jsonStages;
+    },
+    stageNames() {
+      return this.stages.map(x => {
         return { name: x.stage };
       });
     },
@@ -73,7 +73,7 @@ export default {
       if (!this.areValuesOk) return;
       const chests = [];
 
-      this.rewards
+      this.stages
         .find(x => x.stage == this.currentStage)
         .chests.forEach(chest => {
           if (this.displayableItems.includes(chest.Content)) {
@@ -102,7 +102,7 @@ export default {
         .format("YYYY-MM-DD HH:mm");
     },
     isValidStage(stage) {
-      return this.stages.find(x => x.name === stage);
+      return this.stageNames.find(x => x.name === stage);
     },
     isValidDate(date) {
       return moment(date).isValid();
