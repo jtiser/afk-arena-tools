@@ -4,7 +4,7 @@
     <v-card-text>
       <v-autocomplete
         :items="stages"
-        v-model="stage"
+        v-model="currentStage"
         item-text="name"
         label="What stage are you on?"
       ></v-autocomplete>
@@ -36,22 +36,45 @@ export default {
   name: "stage-idle-rewards",
   data() {
     return {
-      stages: business.stages,
-      stage: "",
+      currentStage: "",
       datetime: null,
-      displayableItems: ["Mythic+ Stone", "Mythic Gear", "Faction Emblems"]
+      displayableItems: ["Mythic+ Stone", "Mythic Gear", "Faction Emblems"],
+      storageKeys: {
+        currentStage: "currentStage",
+        stageCompletionDate: "stageCompletionDate"
+      }
     };
+  },
+  mounted() {
+    const stageFromLocalStorage = localStorage.getItem(
+      this.storageKeys.currentStage
+    );
+    const dateFromLocalStorage = localStorage.getItem(
+      this.storageKeys.stageCompletionDate
+    );
+    if (this.isValidStage(stageFromLocalStorage))
+      this.currentStage = stageFromLocalStorage;
+    if (this.isValidDate(dateFromLocalStorage))
+      this.datetime = dateFromLocalStorage;
   },
   computed: {
     areValuesOk() {
-      return !!this.stage && !!this.datetime;
+      return !!this.currentStage && !!this.datetime;
+    },
+    rewards() {
+      return business.rewards;
+    },
+    stages() {
+      return this.rewards.map(x => {
+        return { name: x.stage };
+      });
     },
     stageChests() {
       if (!this.areValuesOk) return;
       const chests = [];
 
-      business.rewards
-        .find(x => x.stage == this.stage)
+      this.rewards
+        .find(x => x.stage == this.currentStage)
         .chests.forEach(chest => {
           if (this.displayableItems.includes(chest.Content)) {
             let newChest = {
@@ -77,6 +100,23 @@ export default {
       return moment(this.datetime)
         .add(chestCd * 0.51, "seconds")
         .format("YYYY-MM-DD HH:mm");
+    },
+    isValidStage(stage) {
+      return this.stages.find(x => x.name === stage);
+    },
+    isValidDate(date) {
+      return moment(date).isValid();
+    }
+  },
+  watch: {
+    currentStage(newVal) {
+      if (this.isValidStage(newVal))
+        localStorage.setItem(this.storageKeys.currentStage, newVal);
+    },
+    datetime(newVal) {
+      if (!newVal) return;
+      const date = moment(this.datetime).format("YYYY-MM-DD HH:mm");
+      localStorage.setItem(this.storageKeys.stageCompletionDate, date);
     }
   }
 };
