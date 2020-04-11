@@ -1,5 +1,3 @@
-import stages from "./stages";
-import rewards from "./rewards";
-import contents from "./contents";
+import chestContents from "./chestContents";
 
-export default { stages, rewards, contents };
+export default { chestContents };
