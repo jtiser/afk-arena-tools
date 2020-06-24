@@ -69,10 +69,10 @@ export default {
     },
     defaultAssets: {
       font: true,
-      icons: "md"
+      icons: "mdi"
     },
     icons: {
-      iconfont: "md"
+      iconfont: "mdi"
     }
   },
   /*
