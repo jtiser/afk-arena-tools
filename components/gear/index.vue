@@ -12,7 +12,7 @@
 
       <v-tabs-items v-model="tab">
         <v-tab-item v-for="faction in factions" :key="faction">
-          <types></types>
+          <types :faction="faction"></types>
         </v-tab-item>
       </v-tabs-items>
     </v-tabs>
